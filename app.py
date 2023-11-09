@@ -19,8 +19,7 @@ def predict():
     Radio = request.form.get('Radio')
     Newspaper = request.form.get('Newspaper')
 
-    input_data = pd.DataFrame([[TV, Radio, Newspaper]], columns=[
-                              'TV', 'Radio', 'Newspaper'])
+    input_data = pd.DataFrame([[TV, Radio, Newspaper]], columns=['TV', 'Radio', 'Newspaper'])
 
     prediction = model.predict(input_data)[0]
     prediction = round(prediction)
