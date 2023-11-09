@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Curves, Waves, and Blobs</title>
+    
+    <style>
+      h1 {
+        font-size: 4rem;
+      }
+      p {
+        font-size: 1.5rem;
+      }
+      body {
+        margin: 0;
+        font-family:'Open Sans', sans-serif;
+        background: #2e00a2;
+        overflow-x: hidden;
+      }
+      .center-container {
+    text-align: center;
+    background-color: transparent;
+    z-index: 100;
+  }
+
+  .header {
+    font-size: 24px;
+    margin: 20px;
+    font-size: 3vw;
+  }
+
+  .input-form {
+    margin: 20px;
+    display: inline-block;
+    text-align: left;
+  }
+
+  label {
+    display: block;
+    font-size: 16px;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #555;
+    background-color: #fff;
+    color: #000;
+    border-radius: 5px;
+    /* Add border-radius for a subtle curve */
+  }
+
+  .submit-button {
+    background-color: blueviolet;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px
+  }
+
+  .submit-button:hover {
+    background-color: rgb(111, 35, 183);
+  }
+
+  .prediction-container {
+    margin: 20px;
+    margin-bottom: 50px;
+    animation: fadeIn 1s ease;
+    /* Add animation */
+  }
+
+  .prediction-text {
+    font-size: 20px;
+    /* Increase font size for prediction text */
+    opacity: 1;
+    /* z-index: -80; */
+    /* Initially, set opacity to 0 for the animation */
+  }
+
+  /* Define the fadeIn animation */
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+
+      section {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 400px;
+        padding-top: 100px;
+      }
+
+      .blue {
+        background: #fff;
+        padding: 0;
+      }
+
+      .red {
+        background: #dd3f31;
+      }
+
+      .pink {
+        background: #ff0066;
+        overflow: hidden;
+      }
+
+      .dark {
+        background: #0f0f10;
+      }
+
+      /* Curved bg with plain CSS */
+
+      .curve {
+        position: absolute;
+        height: 250px;
+        width: 100%;
+        /* z-index: -40; */
+        bottom: 0;
+        text-align: center;
+      }
+
+      .curve::before {
+        content: '';
+        display: block;
+        position: absolute;
+        border-radius: 100% 50%;
+        width: 55%;
+        height: 100%;
+        transform: translate(85%, 60%);
+        background-color: #2e00a2;
+      }
+
+      .curve::after {
+        content: '';
+        display: block;
+        position: absolute;
+        border-radius: 100% 50%;
+        width: 55%;
+        height: 100%;
+        background-color: #fff;
+        transform: translate(-4%, 40%);
+        z-index: -1;
+      }
+
+      /* Bubble bg with plain CSS */
+
+      .bubble::after {
+        content: '';
+        border-top-left-radius: 50% 100%;
+        border-top-right-radius: 50% 100%;
+        position: absolute;
+        bottom: 0;
+        z-index: -1;
+        width: 100%;
+        background-color: #0f0f10;
+        height: 85%;
+      }
+
+      /* Curved bg with SVG via https://www.shapedivider.app/ */
+
+      .wave {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        overflow: hidden;
+        line-height: 0;
+      }
+
+      .wave svg {
+        position: relative;
+        display: block;
+        width: calc(103% + 1.3px);
+        height: 262px;
+      }
+
+      .wave .shape-fill {
+        fill: hsl(240, 3%, 6%);
+      }
+
+      /* SVG background image via https://haikei.app/ */
+
+      .spacer {
+        aspect-ratio: 960/300;
+        width: 100%;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+      }
+
+      .layer1 {
+        background-image: url('./layer1.svg');
+      }
+      .layer2 {
+        background-image: url('./layer2.svg');
+      }
+
+      .flip {
+        transform: rotate(180deg);
+      }
+
+      /* Blobs SVG background image via https://haikei.app/ */
+
+      .blob-motion {
+        position: absolute;
+        transform: translateY(-20%);
+        z-index: 0;
+      }
+
+      .blob-content {
+        z-index: 1;
+      }
+
+      .blobs {
+        width: 100%;
+        background: url('./blobs.svg') no-repeat bottom / cover;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="blue">
+      <div class="curve"></div>
+      <div class="center-container">
+        <h1 class="header">Future Sales based on Advertisement</h1>
+        <form method="POST" action="/predict" class="input-form">
+          <label for="TV">TV:</label>
+          <input type="text" name="TV" id="TV"><br>
+          <label for="Radio">Radio:</label>
+          <input type="text" name="Radio" id="Radio"><br>
+          <label for="Newspaper">Newspaper:</label>
+          <input type="text" name="Newspaper" id="Newspaper"><br>
+          <input type="submit" value="Predict" class="submit-button">
+        </form>
+        <div class="prediction-container">
+          <div class="prediction-text"><span id="prediction"></span></div>
+        </div>
+      </div>
+    </section>
+    <script>
+       // Handle form submission and display prediction
+    document.querySelector('form').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const formData = new FormData(this);
+      fetch('/predict', {
+        method: 'POST',
+        body: formData,
+      })
+        .then(response => response.text())
+        .then(prediction => {
+          document.getElementById('prediction').textContent = prediction;
+        });
+    });
+    </script>
+  </body>
+</html>
